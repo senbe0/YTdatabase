@@ -76,7 +76,7 @@ async def get_video_objects_List():
     video_obj_list = []
     videosList = videosDB.select_all_from_videosTable()
     for videoInfo in videosList:
-        videoID = videoInfo["videoID"]
+        videoID = videoInfo.videoID
         tableName = convert_video_id_to_table_name(videoID)
         viewersRecordsList = viewersDB.select_all_from_viewersTable(tableName)
         video_object = {
