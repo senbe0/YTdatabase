@@ -26,8 +26,8 @@ async def insert_record_to_videosDB(record: dict):
     try:
         videosDB.insert_videoRecord(videoID, channelID, title, videoURL, iconImageURL)
         return {"status": "success"}
-    except:
-        return {"status": "failure"}
+    except Exception as e:
+        return {"status": "failure", "msg": e}
 
 @app.post("/videosDB/delete")
 async def delete_record_from_videoDB(info: dict):
@@ -35,8 +35,8 @@ async def delete_record_from_videoDB(info: dict):
     try:
         videosDB.delete__videoRecord(videoID)
         return {"status": "success"}
-    except:
-        return {"status": "failure"}
+    except Exception as e:
+        return {"status": "failure", "msg": e}
 
 
 
@@ -46,8 +46,8 @@ async def create_table_into_viewersDB(info: dict):
     try:
         viewersDB.create_table(tableName)
         return {"status": "success"}
-    except:
-        return {"status": "failure"}
+    except Exception as e:
+        return {"status": "failure", "msg": e}
 
 @app.post("/viewersDB/delete")
 async def delete_table_from_viewersDB(info: dict):
@@ -55,8 +55,8 @@ async def delete_table_from_viewersDB(info: dict):
     try:
         viewersDB.delete_viewerTable(tableName)
         return {"status": "success"}
-    except:
-        return {"status": "failure"}
+    except Exception as e:
+        return {"status": "failure", "msg": e}
 
 @app.post("/viewersDB/insert")
 async def insert_record_into_viewersDB(record: dict):
@@ -66,8 +66,8 @@ async def insert_record_into_viewersDB(record: dict):
     try:
         viewersDB.insert_viewerRecord(tableName, time, viewers)
         return {"status": "success"}
-    except:
-        return {"status": "failure"}
+    except Exception as e:
+        return {"status": "failure", "msg": e}
 
 
 
@@ -79,18 +79,23 @@ async def get_video_objects_List():
         videoInfo_dict = videoInfo.__dict__
         videoID = videoInfo_dict["videoID"]
         tableName = convert_video_id_to_table_name(videoID)
-        viewersRecordsList = viewersDB.select_all_from_viewersTable(tableName)
+        try:
+            viewersRecordsList = viewersDB.select_all_from_viewersTable(tableName)
 
-        video_object = {
-            "videoID": videoInfo_dict["videoID"],
-            "channelID": videoInfo_dict["channelID"],
-            "videoURL": videoInfo_dict["videoURL"],
-            "videoTitle": videoInfo_dict["title"],
-            # *viewersData exsample*
-            # "viewersData": [{sequence: 1, time: "20:30", viewers: 1900}, {sequence: 2, time: 20:21, viewers: 1200} ...,
-            "viewersData": viewersRecordsList,
-            "iconURL": videoInfo_dict["IconImageURL"]
-        }
-        video_obj_list.append(video_object)
+            video_object = {
+                "videoID": videoInfo_dict["videoID"],
+                "channelID": videoInfo_dict["channelID"],
+                "videoURL": videoInfo_dict["videoURL"],
+                "videoTitle": videoInfo_dict["title"],
+                # *viewersData exsample*
+                # "viewersData": [{sequence: 1, time: "20:30", viewers: 1900}, {sequence: 2, time: 20:21, viewers: 1200} ...,
+                "viewersData": viewersRecordsList,
+                "iconURL": videoInfo_dict["IconImageURL"]
+            }
+
+            video_obj_list.append(video_object)
+
+        except Exception as e:
+            pass
 
     return {"video_obj_list": video_obj_list}
