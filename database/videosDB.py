@@ -26,7 +26,7 @@ def create_table():
     Base.metadata.create_all(engine)
 
 
-def select_all_from_db():
+def select_all_from_videosTable():
     session = Session()
     try:
         records = session.query(VideoRecord).all()

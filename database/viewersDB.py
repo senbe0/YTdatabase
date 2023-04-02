@@ -21,6 +21,24 @@ def create_table(table_name):
 
     metadata.create_all(engine)
 
+def select_all_from_viewersTable(table_name):
+    table = Table(table_name, metadata, autoload_with=engine)
+    session = Session()
+
+    try:
+        query = table.select()
+        result = session.execute(query)
+        rows = result.fetchall()
+
+        return rows
+
+    except Exception as e:
+        session.rollback()
+        raise e
+
+    finally:
+        session.close()
+
 def delete_viewerTable(table_name):
     try:
         table = Table(table_name, metadata, autoload_with=engine)
