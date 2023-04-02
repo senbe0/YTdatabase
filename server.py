@@ -76,18 +76,20 @@ async def get_video_objects_List():
     video_obj_list = []
     videosList = videosDB.select_all_from_videosTable()
     for videoInfo in videosList:
-        videoID = videoInfo.videoID
+        videoInfo_dict = videoInfo.__dict__
+        videoID = videoInfo_dict["videoID"]
         tableName = convert_video_id_to_table_name(videoID)
         viewersRecordsList = viewersDB.select_all_from_viewersTable(tableName)
+
         video_object = {
-            "videoID": videoInfo.videoID,
-            "channelID": videoInfo.channelID,
-            "videoURL": videoInfo.videoURL,
-            "videoTitle": videoInfo.title,
+            "videoID": videoInfo_dict["videoID"],
+            "channelID": videoInfo_dict["channelID"],
+            "videoURL": videoInfo_dict["videoURL"],
+            "videoTitle": videoInfo_dict["title"],
             # *viewersData exsample*
-            # "viewersData": [{sequence: 1, time: "20:90", vew: teststream}, {sequence: 2, time: 20:90, title: teststream} ...,
+            # "viewersData": [{sequence: 1, time: "20:30", viewers: 1900}, {sequence: 2, time: 20:21, viewers: 1200} ...,
             "viewersData": viewersRecordsList,
-            "iconURL": videoInfo.IconImageURL
+            "iconURL": videoInfo_dict["IconImageURL"]
         }
         video_obj_list.append(video_object)
 

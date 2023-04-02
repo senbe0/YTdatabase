@@ -30,7 +30,12 @@ def select_all_from_viewersTable(table_name):
         result = session.execute(query)
         rows = result.fetchall()
 
-        return rows
+        viewer_dicts = []
+        for row in rows:
+            viewer_dict = row._mapping
+            viewer_dicts.append(viewer_dict)
+        return viewer_dicts
+
 
     except Exception as e:
         session.rollback()
@@ -38,6 +43,7 @@ def select_all_from_viewersTable(table_name):
 
     finally:
         session.close()
+
 
 def delete_viewerTable(table_name):
     try:

@@ -15,6 +15,10 @@ Base = declarative_base()
 class VideoRecord(Base):
     __tablename__ = "video_records"
 
+    __mapper_args__ = {
+        "exclude_properties": ["__dict__"]
+    }
+
     videoID = Column(String, primary_key=True)
     channelID = Column(String)
     title = Column(String)
