@@ -18,11 +18,11 @@ class VideoRecord(Base):
         "exclude_properties": ["__dict__"]
     }
 
-    videoID = Column(String, primary_key=True)
-    channelID = Column(String)
-    title = Column(String)
-    videoURL = Column(String)
-    IconImageURL = Column(String)
+    videoID = Column(String(255), primary_key=True)
+    channelID = Column(String(255))
+    title = Column(String(255))
+    videoURL = Column(String(255))
+    IconImageURL = Column(String(255))
 
 
 def create_table():

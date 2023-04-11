@@ -14,7 +14,7 @@ metadata = MetaData()
 def create_table(table_name):
     table = Table(table_name, metadata,
         Column("sequence", Integer, primary_key=True),
-        Column("time", String),
+        Column("time", String(50)),
         Column("viewers", Integer),
     )
 
