@@ -4,7 +4,7 @@ from sqlalchemy.exc import NoSuchTableError
 import os
 
 
-db_path = f"mysql+pymysql://root:Msirtz3173@localhost/YTviewers.db"
+db_path = f"mysql+pymysql://root:Msirtz3173@localhost/yt_viewersdb"
 
 engine = create_engine(db_path, echo=True)
 Session = sessionmaker(bind=engine)

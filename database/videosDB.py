@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 import os
 
  
-db_path = f"mysql+pymysql://root:Msirtz3173@localhost/YTvideos.db"
+db_path = f"mysql+pymysql://root:Msirtz3173@localhost/yt_videosdb"
 
 engine = create_engine(db_path, echo=True)
 Session = sessionmaker(bind=engine)
