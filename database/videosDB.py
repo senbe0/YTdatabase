@@ -3,9 +3,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import os
 
-
-database_path = os.path.join(os.path.dirname(__file__), "YTvideos.db") 
-db_path = f"mysql+pymysql://root:Msirtz3173@localhost{database_path}"
+ 
+db_path = f"mysql+pymysql://root:Msirtz3173@localhost/YTvideos.db"
 
 engine = create_engine(db_path, echo=True)
 Session = sessionmaker(bind=engine)
