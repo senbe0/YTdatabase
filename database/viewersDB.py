@@ -12,13 +12,15 @@ metadata = MetaData()
 
 
 def create_table(table_name):
-    table = Table(table_name, metadata,
-        Column("sequence", Integer, primary_key=True),
-        Column("time", String(50)),
-        Column("viewers", Integer),
-    )
-
-    metadata.create_all(engine)
+    try:
+        table = Table(table_name, metadata,
+            Column("sequence", Integer, primary_key=True),
+            Column("time", String(50)),
+            Column("viewers", Integer),
+        )
+        metadata.create_all(engine)
+    except Exception as e:
+        raise e
 
 def select_all_from_viewersTable(table_name):
     table = Table(table_name, metadata, autoload_with=engine)
@@ -48,6 +50,7 @@ def delete_viewerTable(table_name):
     try:
         table = Table(table_name, metadata, autoload_with=engine)
         table.drop(engine)
+        metadata.remove(table)
 
     except NoSuchTableError:
         pass
