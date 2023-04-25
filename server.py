@@ -24,10 +24,17 @@ async def insert_record_to_videosDB(record: dict):
     videoURL = record["videoURL"]
     iconImageURL = record["iconImageURL"]
     try:
-        videosDB.insert_videoRecord(videoID, channelID, title, videoURL, iconImageURL)
+        record = videosDB.get_video_record_by_id(videoID)
+        if record:
+            if record.title != title:
+                videosDB.update_video_title(videoID, title)
+        else:
+            videosDB.insert_videoRecord(videoID, channelID, title, videoURL, iconImageURL)
         return {"status": "success"}
     except Exception as e:
         return {"status": "failure", "msg": e}
+
+
 
 @app.post("/videosDB/delete")
 async def delete_record_from_videoDB(info: dict):
@@ -81,19 +88,19 @@ async def get_video_objects_List():
         tableName = convert_video_id_to_table_name(videoID)
         try:
             viewersRecordsList = viewersDB.select_all_from_viewersTable(tableName)
+            if len(viewersRecordsList) != 0:
+                video_object = {
+                    "videoID": videoInfo_dict["videoID"],
+                    "channelID": videoInfo_dict["channelID"],
+                    "videoURL": videoInfo_dict["videoURL"],
+                    "videoTitle": videoInfo_dict["title"],
+                    # *viewersData exsample*
+                    # "viewersData": [{sequence: 1, time: "20:30", viewers: 1900}, {sequence: 2, time: 20:21, viewers: 1200} ...,
+                    "viewersData": viewersRecordsList,
+                    "iconURL": videoInfo_dict["IconImageURL"]
+                }
 
-            video_object = {
-                "videoID": videoInfo_dict["videoID"],
-                "channelID": videoInfo_dict["channelID"],
-                "videoURL": videoInfo_dict["videoURL"],
-                "videoTitle": videoInfo_dict["title"],
-                # *viewersData exsample*
-                # "viewersData": [{sequence: 1, time: "20:30", viewers: 1900}, {sequence: 2, time: 20:21, viewers: 1200} ...,
-                "viewersData": viewersRecordsList,
-                "iconURL": videoInfo_dict["IconImageURL"]
-            }
-
-            video_obj_list.append(video_object)
+                video_obj_list.append(video_object)
 
         except Exception as e:
             pass

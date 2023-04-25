@@ -29,6 +29,32 @@ def create_table():
     Base.metadata.create_all(engine)
 
 
+
+def get_video_record_by_id(video_id: str):
+    session = Session()
+    try:
+        record = session.query(VideoRecord).filter_by(videoID=video_id).first()
+        return record
+    except Exception as e:
+        session.rollback()
+        raise e
+    finally:
+        session.close()
+
+def update_video_title(video_id: str, new_title: str):
+    session = Session()
+    try:
+        video = session.query(VideoRecord).filter_by(videoID=video_id).first()
+        if video:
+            video.title = new_title
+            session.commit()
+    except Exception as e:
+        session.rollback()
+        raise e
+    finally:
+        session.close()
+
+
 def select_all_from_videosTable():
     session = Session()
     try:
