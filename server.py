@@ -77,8 +77,7 @@ async def insert_record_into_viewersDB(record: dict):
         return {"status": "failure", "msg": e}
 
 
-
-@app.get("/getVideoObjList")
+@app.get("/getVideoObjList_all")
 async def get_video_objects_List():
     video_obj_list = []
     videosList = videosDB.select_all_from_videosTable()
@@ -87,7 +86,7 @@ async def get_video_objects_List():
         videoID = videoInfo_dict["videoID"]
         tableName = convert_video_id_to_table_name(videoID)
         try:
-            viewersRecordsList = viewersDB.select_all_from_viewersTable(tableName)
+            viewersRecordsList = viewersDB.get_latest_180_records(tableName)
             if len(viewersRecordsList) != 0:
                 video_object = {
                     "videoID": videoInfo_dict["videoID"],
@@ -106,3 +105,35 @@ async def get_video_objects_List():
             pass
 
     return {"video_obj_list": video_obj_list}
+
+
+@app.get("/getVideoObjList")
+async def get_video_objects_List(lang: str = None):
+    print(lang)
+    video_obj_list = []
+    videosList = videosDB.get_video_records_by_group_name(lang)
+    for videoInfo in videosList:
+        videoInfo_dict = videoInfo.__dict__
+        videoID = videoInfo_dict["videoID"]
+        tableName = convert_video_id_to_table_name(videoID)
+        try:
+            viewersRecordsList = viewersDB.get_latest_180_records(tableName)
+            if len(viewersRecordsList) != 0:
+                video_object = {
+                    "videoID": videoInfo_dict["videoID"],
+                    "channelID": videoInfo_dict["channelID"],
+                    "videoURL": videoInfo_dict["videoURL"],
+                    "videoTitle": videoInfo_dict["title"],
+                    # *viewersData exsample*
+                    # "viewersData": [{sequence: 1, time: "20:30", viewers: 1900}, {sequence: 2, time: 20:21, viewers: 1200} ...,
+                    "viewersData": viewersRecordsList,
+                    "iconURL": videoInfo_dict["IconImageURL"]
+                }
+
+                video_obj_list.append(video_object)
+
+        except Exception as e:
+            pass
+
+    return {"video_obj_list": video_obj_list}
+

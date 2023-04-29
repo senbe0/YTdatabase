@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData
+from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, desc
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import NoSuchTableError
 import os
@@ -22,12 +22,12 @@ def create_table(table_name):
     except Exception as e:
         raise e
 
-def select_all_from_viewersTable(table_name):
+def get_latest_180_records(table_name):
     table = Table(table_name, metadata, autoload_with=engine)
     session = Session()
 
     try:
-        query = table.select()
+        query = table.select().order_by(desc(table.c.sequence)).limit(180)
         result = session.execute(query)
         rows = result.fetchall()
 
@@ -36,7 +36,6 @@ def select_all_from_viewersTable(table_name):
             viewer_dict = row._mapping
             viewer_dicts.append(viewer_dict)
         return viewer_dicts
-
 
     except Exception as e:
         session.rollback()

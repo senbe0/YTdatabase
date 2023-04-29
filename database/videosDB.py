@@ -24,6 +24,17 @@ class VideoRecord(Base):
     videoURL = Column(String(255))
     IconImageURL = Column(String(255))
 
+class Category(Base):
+    __tablename__ = "video_category"
+
+    __mapper_args__ = {
+        "exclude_properties": ["__dict__"]
+    }
+
+    channelID = Column(String(255), primary_key=True)
+    group_name = Column(String(255))
+
+
 
 def create_table():
     Base.metadata.create_all(engine)
@@ -59,6 +70,18 @@ def select_all_from_videosTable():
     session = Session()
     try:
         records = session.query(VideoRecord).all()
+        return records
+    except Exception as e:
+        session.rollback()
+        raise e
+    finally:
+        session.close()
+
+
+def get_video_records_by_group_name(group_name: str):
+    session = Session()
+    try:
+        records = session.query(VideoRecord).join(Category, VideoRecord.channelID == Category.channelID).filter(Category.group_name == group_name).all()
         return records
     except Exception as e:
         session.rollback()
@@ -123,4 +146,6 @@ def update_iconImageURL(videoID: str, iconImageURL: str):
 
 if __name__ == "__main__":
     # if NOT exist table, create it.
-    create_table()
+    # create_table()
+    L = get_video_records_by_group_name("jp")
+    print(L)
