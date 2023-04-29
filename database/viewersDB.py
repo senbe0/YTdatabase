@@ -22,6 +22,7 @@ def create_table(table_name):
     except Exception as e:
         raise e
 
+
 def get_latest_180_records(table_name):
     table = Table(table_name, metadata, autoload_with=engine)
     session = Session()
@@ -35,7 +36,11 @@ def get_latest_180_records(table_name):
         for row in rows:
             viewer_dict = row._mapping
             viewer_dicts.append(viewer_dict)
-        return viewer_dicts
+
+        # Sort the viewer_dicts in ascending order by sequence
+        sorted_viewer_dicts = sorted(viewer_dicts, key=lambda x: x['sequence'], reverse=False)
+
+        return sorted_viewer_dicts
 
     except Exception as e:
         session.rollback()
@@ -43,6 +48,7 @@ def get_latest_180_records(table_name):
 
     finally:
         session.close()
+
 
 
 def delete_viewerTable(table_name):
