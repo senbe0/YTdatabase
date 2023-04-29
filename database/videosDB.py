@@ -146,6 +146,4 @@ def update_iconImageURL(videoID: str, iconImageURL: str):
 
 if __name__ == "__main__":
     # if NOT exist table, create it.
-    # create_table()
-    L = get_video_records_by_group_name("jp")
-    print(L)
+    create_table()
