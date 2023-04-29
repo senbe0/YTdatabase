@@ -28,7 +28,7 @@ def get_latest_180_records(table_name):
     session = Session()
 
     try:
-        query = table.select().order_by(desc(table.c.sequence)).limit(180)
+        query = table.select().order_by(desc(table.c.sequence)).limit(60)
         result = session.execute(query)
         rows = result.fetchall()
 

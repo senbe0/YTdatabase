@@ -28,9 +28,11 @@ async def insert_record_to_videosDB(record: dict):
         if record:
             if record.title != title:
                 videosDB.update_video_title(videoID, title)
+                return {"status": "update"}
+            return {"status": "already"}
         else:
             videosDB.insert_videoRecord(videoID, channelID, title, videoURL, iconImageURL)
-        return {"status": "success"}
+            return {"status": "success"}
     except Exception as e:
         return {"status": "failure", "msg": e}
 
