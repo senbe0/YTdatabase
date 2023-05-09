@@ -15,6 +15,10 @@ def convert_video_id_to_table_name(videoID):
     return table_name
 
 
+def all_same(items):
+    return all(x == items[0] for x in items)
+
+
 
 @app.post("/videosDB/insert")
 async def insert_record_to_videosDB(record: dict):
@@ -139,3 +143,19 @@ async def get_video_objects_List(lang: str = None):
 
     return {"video_obj_list": video_obj_list}
 
+
+@app.get("/get_private_bool")
+async def IsItprivate(videoID):
+    table_name = convert_video_id_to_table_name(videoID)
+    rows =viewersDB.get_latest_8_records(table_name)
+
+    viewersList = []
+    for row in rows:
+        viewersList.append(row["viewers"])
+
+    isprivate = all_same(viewersList)
+
+    if len(viewersList) != 8:
+        isprivate = False
+
+    return isprivate

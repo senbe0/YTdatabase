@@ -50,6 +50,32 @@ def get_latest_180_records(table_name):
         session.close()
 
 
+def get_latest_8_records(table_name):
+    table = Table(table_name, metadata, autoload_with=engine)
+    session = Session()
+
+    try:
+        query = table.select().order_by(desc(table.c.sequence)).limit(8)
+        result = session.execute(query)
+        rows = result.fetchall()
+
+        viewer_dicts = []
+        for row in rows:
+            viewer_dict = row._mapping
+            viewer_dicts.append(viewer_dict)
+
+        # Sort the viewer_dicts in ascending order by sequence
+        sorted_viewer_dicts = sorted(viewer_dicts, key=lambda x: x['sequence'], reverse=False)
+
+        return sorted_viewer_dicts
+
+    except Exception as e:
+        session.rollback()
+        raise e
+
+    finally:
+        session.close()
+
 
 def delete_viewerTable(table_name):
     try:
