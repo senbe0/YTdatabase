@@ -147,7 +147,7 @@ async def get_video_objects_List(lang: str = None):
 @app.get("/get_private_bool")
 async def IsItprivate(videoID):
     table_name = convert_video_id_to_table_name(videoID)
-    rows =viewersDB.get_latest_8_records(table_name)
+    rows =viewersDB.get_latest_20_records(table_name)
 
     viewersList = []
     for row in rows:
@@ -155,7 +155,7 @@ async def IsItprivate(videoID):
 
     isprivate = all_same(viewersList)
 
-    if len(viewersList) != 8:
+    if len(viewersList) != 20:
         isprivate = False
 
     return isprivate

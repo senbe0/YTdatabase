@@ -50,12 +50,12 @@ def get_latest_180_records(table_name):
         session.close()
 
 
-def get_latest_8_records(table_name):
+def get_latest_20_records(table_name):
     table = Table(table_name, metadata, autoload_with=engine)
     session = Session()
 
     try:
-        query = table.select().order_by(desc(table.c.sequence)).limit(8)
+        query = table.select().order_by(desc(table.c.sequence)).limit(20)
         result = session.execute(query)
         rows = result.fetchall()
 
